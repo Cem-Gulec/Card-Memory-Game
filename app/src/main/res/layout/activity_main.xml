@@ -31,13 +31,16 @@
                 android:columnCount="4"
                 android:rowCount="4"></GridLayout>
 
-            <Button
-                android:id="@+id/button2"
+            <GridLayout
+
+                android:id="@+id/cardLayoutSocket"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentBottom="true"
-                android:layout_alignStart="@+id/cardLayout"
-                android:text="OYUNU SIFIRLA" />
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:columnCount="4"
+                android:rowCount="4"></GridLayout>
+
 
             <TextView
                 android:id="@+id/textView5"

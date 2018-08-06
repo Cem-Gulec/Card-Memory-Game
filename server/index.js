@@ -1,21 +1,31 @@
 var app = require('express')();
 var server = require('http').Server(app);
 var io = require('socket.io')(server);
-var playernum = 1;
+var playernum = 0;
 var sayac=0;
+var arr = [];
+
+function fillArray() {
+	arr = [];
+	while(arr.length < 16){
+	var randomnumber = Math.floor(Math.random()*16) + 1;
+	if(arr.indexOf(randomnumber) > -1) continue;
+	arr[arr.length] = randomnumber;
+}
+}
 
 server.listen(3000,function(){
 	console.log('Server is running..');
+	fillArray();
 });
 
 io.on('connection',function(socket){
-	console.log('player ' +playernum+ ' connected');
 	playernum++;
-	socket.emit('socketID', { id: socket.id });
+	console.log('player ' +playernum+ ' connected');
+  	socket.emit('socketID', { id: socket.id , array: arr });
 
-	socket.broadcast.emit('newPlayer', { id: socket.id});
 
-    socket.on('cevirEvent', function(cevir){
+	socket.on('cevirEvent', function(cevir){
     	      cevir.id = socket.id;
     	      socket.broadcast.emit("cevirEventhappen", cevir);
     	})
@@ -34,18 +44,15 @@ io.on('connection',function(socket){
 	    socket.broadcast.emit('userjoinedthechat', userNickname+ " has joined");
 	})
 
-	/*socket.on('cardevent', function(onplanID,context){
 
-	    let bilgi = {"onplanID": onplanID, "context":context  }
-        socket.broadcast.emit("cardeventhappen", bilgi);
-
-	});*/
 
 	socket.on('disconnect',function(){
 		playernum--;
 		console.log('player ' +playernum+ ' disconnected');
 		socket.broadcast.emit('playerDisconnected', {id :socket.id});
-
+		if(playernum==0){
+ 		fillArray();
+ 		}
 	});
 
 });

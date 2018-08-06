@@ -24,13 +24,14 @@ public class ResultActivity extends AppCompatActivity {
         setContentView(R.layout.activity_result);
 
 
-        ((Button)findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
+        /*((Button)findViewById(R.id.button)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent i = new Intent(ResultActivity.this, MainActivity.class);
+                setCards();
                 startActivity(i);
             }
-        });
+        });*/
         TextView tv =(TextView) findViewById(R.id.textView3);
         TextView tv2=  (TextView) findViewById(R.id.textView4);
         Intent i = getIntent();

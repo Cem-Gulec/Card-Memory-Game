@@ -2,6 +2,7 @@ package com.example.kartoyun.myapplication;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.Loader;
 import android.graphics.drawable.Drawable;
 import android.os.Handler;
 import android.support.v7.app.AppCompatActivity;
@@ -26,6 +27,7 @@ import io.socket.emitter.Emitter;
 
 public class MainActivity extends AppCompatActivity {
 
+    int randomArray[];
     int sonkart=0;
     int score1=0;
     int score2=0;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
     myCard lastCard;
     myCard currentCard;
 
+    GridLayout cards;
     myCard kartlar[] = new myCard[16];
     private Socket socket;
 
@@ -47,22 +50,29 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         connectSocket();
+        configSocketEvents();
         setContentView(R.layout.activity_main);
         Intent i = getIntent();
 
 
-        ((Button)findViewById(R.id.button2)).setOnClickListener(new View.OnClickListener() {
+        /*((Button)findViewById(R.id.button2)).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+
                 Intent i = new Intent(MainActivity.this, MainActivity.class);
                 startActivity(i);
-            }
-        });
-        GridLayout cards= (GridLayout)findViewById(R.id.cardLayout);
-        configSocketEvents();
 
+                for(int j=0; j<16; j++)
+                    cards.addView(randomArray[j]);
+            }
+        });*/
+
+    }
+
+    public void setCards(){
+        cards= (GridLayout)findViewById(R.id.cardLayout);
         for(int j =1; j<=16; j++){   //card logic kısmı
-            kartlar[j-1] = new myCard(this,j);
+            kartlar[j-1] = new myCard(this,randomArray[j-1]);
             final int k = j-1;
             kartlar[j-1].setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -142,19 +152,10 @@ public class MainActivity extends AppCompatActivity {
             });
         }
 
-       /* for(int j=0; j<16; j++){ //Shuffle
-            int rg = (int)(Math.random()*16);
-            myCard k = kartlar[rg];
-            kartlar[rg]=kartlar[j];
-            kartlar[j]= k;
-
-        }*/
 
         for(int j=0; j<16; j++)
             cards.addView(kartlar[j]);
-
     }
-
 
     public void updatesocketCard(int id){
 
@@ -162,6 +163,7 @@ public class MainActivity extends AppCompatActivity {
         try{
             data.put("onplanID",id);
             socket.emit("cevirEvent",data);
+
 
         }catch (Exception e){
             e.printStackTrace();
@@ -173,7 +175,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void connectSocket(){
         try{
-            socket = IO.socket("http://10.0.2.2:3000");
+            socket = IO.socket("http://10.0.2.2:3000"); //206.189.54.106
             socket.connect();
             connectioncheck=true;
             socket.emit("join","Other player");
@@ -182,7 +184,19 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void configSocketEvents(/*final myCard eventcard*/) {
+    public void parseArray(String array){
+        randomArray = new int[16];
+        array = array.replace("[","");
+        array = array.replace("]","");
+        String arr[] = array.split(",");
+        for(int i=0;i<arr.length;i++) {
+            randomArray[i]=Integer.parseInt(arr[i]);
+        }
+        Log.d("Array Test : ","Gelen : "+arr[0]);
+        setCards();
+    }
+
+    public void configSocketEvents() {
         socket.on(Socket.EVENT_CONNECT, new Emitter.Listener() {
             @Override
             public void call(Object... args) {
@@ -216,10 +230,14 @@ public class MainActivity extends AppCompatActivity {
                     public void run() {
                         try {
                             String id = data.getString("id");
+                            String array = data.getString("array");
+                            //String data1 = data.getString("array");
                             Log.d("SocketIO", "My ID: " + id);
+                            Log.d("SocketIO", "DATA: " + array);
+                            parseArray(array);
+                            //Log.d("SocketIO ARRAY", "My ARRAY: " + data1);
                         } catch (JSONException e) {
                             Log.d("SocketIO", "Error getting ID");
-
                         }
                     }
                 });
@@ -231,7 +249,7 @@ public class MainActivity extends AppCompatActivity {
 
                 runOnUiThread(new Runnable() {
                     @Override
-                    public void run() {
+                    public void run() { //fakegps
                         try {
                             String id = data.getString("id");
                             Log.d("SocketIO", id+ "disconnected");
@@ -303,9 +321,9 @@ public class MainActivity extends AppCompatActivity {
                                 }
                                 else { //eşleşmediler geri çevir
 
-                                            kartlar[onplanID].cevir();
+                                    kartlar[onplanID].cevir();
 
-                                            lastCard.cevir();
+                                    lastCard.cevir();
 
 
 
