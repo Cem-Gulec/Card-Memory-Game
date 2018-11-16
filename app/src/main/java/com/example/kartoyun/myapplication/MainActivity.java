@@ -1,3 +1,16 @@
+/* TODO LIST
+-> kodlardaki karmaşayı düzelt
+-> şadi benzerlikleri gider
+-> MainAc. ve ResultAc.deki butonlara basıldığında gridlerin tekrar gelmesi/yerleşmesi.
+-> Ana ekran (en başa yeni bir intent) yarat
+-> Frontend geliştir
+-> Kart diğer tarafta çok hızlı değişmesin
+-> kart flip ederken animasyonlar sağla (gerçek flip gibi olacak)
+-> kazanan kaybeden ve beraberliğe bağlı arkaplana değişim yarat
+-> sıra bir taraftayken diğer taraf hareket edemesin / ekran background colour değişebilir(yeşil kırmızı gibi)
+-> https://github.com/glnygl/Hero   gibi bir görünüm
+*/
+
 package com.example.kartoyun.myapplication;
 
 import android.content.Context;
