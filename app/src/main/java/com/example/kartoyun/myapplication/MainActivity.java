@@ -1,6 +1,5 @@
 /* TODO LIST
 -> kodlardaki karmaşayı düzelt
--> şadi benzerlikleri gider
 -> MainAc. ve ResultAc.deki butonlara basıldığında gridlerin tekrar gelmesi/yerleşmesi.
 -> Ana ekran (en başa yeni bir intent) yarat
 -> Frontend geliştir
